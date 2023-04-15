@@ -7,9 +7,7 @@ export default function Devices() {
     const [devices, setDevices] = useState([])
     const [openFieldModal, setOpenFieldModal] = useState(false)
     const [updateFieldModalData, setUpdateFieldModalData] = useState({ onAccept: () => { }, onCancel: () => { }, fieldName: "", type: "text" })
-    const updateFunction = (deviceId, fieldName) => {
-        return async (value) => await DeviceService.updateFields(deviceId, { [fieldName]: value })
-    }
+  
     useEffect(() => {
         fetchAndSet()
     }, [])
@@ -31,6 +29,7 @@ export default function Devices() {
             fieldName: fieldName,
             type: type,
             onAccept: async (value) => {
+                if (type === 'number') value = Number(value)
                 const resp = await DeviceService.updateFields(id, { [fieldToUpdate]: value })
                 if (!resp.hasError) fetchAndSet()
                 setOpenFieldModal(false);
