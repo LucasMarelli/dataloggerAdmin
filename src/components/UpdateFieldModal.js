@@ -1,6 +1,7 @@
 import { Label } from "@mui/icons-material";
 import { Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AppContext } from "../App";
 
 /**
  * @param {object} obj
@@ -9,9 +10,18 @@ import { useState } from "react";
  */
 export default function UpdateFieldModal({ open, onAccept = () => { }, onCancel = () => { }, title = "", fieldName = "", type = "" }) {
     const [value, setValue] = useState("")
-    const onAccept_ = (event) => {
-        onAccept(value);
-        setValue("");
+    const { setIsLoading } = useContext(AppContext);
+
+
+    const onAccept_ = async (event) => {
+        try {
+            setIsLoading(true)
+            await onAccept(value);
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsLoading(false)
+        }
     }
     const onCancel_ = () => {
         setValue("");
@@ -44,7 +54,7 @@ export default function UpdateFieldModal({ open, onAccept = () => { }, onCancel 
                     </span>
                 </div>
                 <div style={{ margin: 30, display: "flex", justifyContent: "space-around", width: "70%" }}>
-                    <Button onClick={onAccept_} variant="contained">Aceptar</Button>
+                    <Button onClick={onAccept_} disabled={!value} variant="contained">Aceptar</Button>
                     <Button onClick={onCancel_} variant="contained">Cancelar</Button>
                 </div>
             </div>

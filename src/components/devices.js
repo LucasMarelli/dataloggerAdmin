@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import DeviceService from "../services/DeviceService";
 import { Paper, Table, TableCell, TableContainer, TableHead, TableRow, TableBody } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
@@ -7,7 +7,7 @@ export default function Devices() {
     const [devices, setDevices] = useState([])
     const [openFieldModal, setOpenFieldModal] = useState(false)
     const [updateFieldModalData, setUpdateFieldModalData] = useState({ onAccept: () => { }, onCancel: () => { }, fieldName: "", type: "text" })
-  
+
     useEffect(() => {
         fetchAndSet()
     }, [])
@@ -36,6 +36,18 @@ export default function Devices() {
             }
         })
     }
+    const updateSamplingTimeModalHandler = async () => {
+        setOpenFieldModal(true);
+        setUpdateFieldModalData({
+            fieldName: "Intervalo de muestreo",
+            type: "number",
+            onAccept: async (value) => {
+                const resp = await DeviceService.updateSamplingTime(value)
+                if (!resp.hasError) fetchAndSet()
+                setOpenFieldModal(false);
+            }
+        })
+    }
     return (
         <>
             <TableContainer component={Paper}>
@@ -46,7 +58,10 @@ export default function Devices() {
                             <TableCell align="center">Nombre</TableCell>
                             <TableCell align="center">Estado</TableCell>
                             <TableCell align="center">Unidad</TableCell>
-                            <TableCell align="center">Intervalo de muestreo</TableCell>
+                            <TableCell align="center">
+                                <span>Intervalo de muestreo</span>
+                                <EditIcon onClick={updateSamplingTimeModalHandler} style={styles.editIcon} />
+                            </TableCell>
                             <TableCell align="center">Última conexión</TableCell>
                             <TableCell align="center">Última desconexión</TableCell>
                         </TableRow>
@@ -65,11 +80,11 @@ export default function Devices() {
                                 <TableCell style={{ color: device?.status === "not_connected" ? "red" : "green", fontWeight: "bold" }} align="center">{device.status}</TableCell>
                                 <TableCell align="center">
                                     <span>{device.unit}</span>
-                                    <EditIcon onClick={() => editModalHandler(device.id, "unit", "Unidad")} style={{ fontSize: 15, marginLeft: 5, cursor: "pointer" }} />
+                                    <EditIcon onClick={() => editModalHandler(device.id, "unit", "Unidad")} style={styles.editIcon} />
                                 </TableCell>
                                 <TableCell align="center">
                                     <span>{device.samplingTime}</span>
-                                    <EditIcon onClick={() => editModalHandler(device.id, "samplingTime", "Intervalo de muestreo", "number")} style={{ fontSize: 15, marginLeft: 5, cursor: "pointer" }} />
+                                    {/* <EditIcon onClick={() => editModalHandler(device.id, "samplingTime", "Intervalo de muestreo", "number")} style={styles.editIcon} /> */}
                                 </TableCell>
                                 <TableCell align="center">{device.lastConnection}</TableCell>
                                 <TableCell align="center">{device.lastDisconnection}</TableCell>
@@ -90,4 +105,8 @@ export default function Devices() {
                 })
             } */}
         </>)
+}
+
+var styles = {
+    editIcon: { fontSize: 15, marginLeft: 5, cursor: "pointer" }
 }
