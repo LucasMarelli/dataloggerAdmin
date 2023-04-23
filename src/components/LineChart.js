@@ -1,54 +1,59 @@
 import moment from "moment/moment";
 import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis, Tooltip, ScatterChart, Scatter, ResponsiveContainer } from "recharts";
 
-export default function MyLineChart({ data }) {
+export default function MyLineChart({ data, devices }) {
     if (!data?.length) return (<div>No data</div>)
-    data.forEach((d) => {
-        d.measurements?.forEach((measurement) => measurement.createdAt = new Date(measurement.createdAt).getTime())
-    })
     return (
+        // <>
+        //     <div style={{ width: '100%', height: 500, marginTop: 40, }}>
+        //         <ResponsiveContainer >
+        //             <LineChart width={730} height={250}
+        //                 margin={{ bottom: 100 }}>
+        //                 <Legend verticalAlign="top" />
+        //                 <CartesianGrid strokeDasharray="3 3" />
+        //                 <XAxis type="number" dataKey="time" scale={"time"} angle={45} fontSize={15} textAnchor="bottom" domain={['auto', 'auto']} tickFormatter={(value) => moment(value).format("DD/MM/yy HH:mm")} />
+        //                 <YAxis type="number" dataKey="value" domain={[0, "auto"]} />
+        //                 <Tooltip content={CustomTooltip} />
+        //                 {data?.map((d, index) => <Line key={index} name={d.name} dataKey={"value"} stroke={colors[index]} data={d.measurements} />)}
+        //             </LineChart>
+        //         </ResponsiveContainer>
+        //     </div>
+        // </>
         <>
-            <div style={{ width: '100%', height: 400, marginTop: 40, }}>
+            <div style={{ width: '100%', height: 500, marginTop: 40, }}>
                 <ResponsiveContainer >
-                    <LineChart width={730} height={250}
-                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <LineChart width={730} height={250} data={data}
+                        margin={{ bottom: 100 }}>
+                        <Legend verticalAlign="top" />
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis type="number" dataKey="createdAt" scale={"time"} domain={['auto', 'auto']} tickFormatter={(value) => moment(value).format("DD/MM/yy hh:mm")} />
-                        <YAxis type="number" dataKey="value" domain={[0, "auto"]} />
-                        <Tooltip />
-                        <Legend />
-                        {data?.map((d, index) => <Line key={index} name={d.name} dataKey={"value"} stroke={colors[index]} data={d.measurements} />)}
+                        <XAxis type="number" dataKey="time" scale={"time"} angle={45} fontSize={15} textAnchor="bottom" domain={['auto', 'auto']} tickFormatter={(value) => moment(value).format("DD/MM/yy HH:mm")} />
+                        <YAxis type="number" domain={[0, "auto"]} />
+                        <Tooltip content={CustomTooltip} />
+                        {devices?.map((d, index) => <Line key={index} name={d.name} dataKey={d.name} stroke={colors[index]} />)}
                     </LineChart>
                 </ResponsiveContainer>
             </div>
         </>
     )
 }
-const colors = ["#8884d8", "#82ca9d", "#ffc658", "#d45087", "#47bac1",
-    "#e27c3e", "#8d62a9", "#ff9f40", "#6e5687", "#52b6ca"];
-const data1 = {
-    name: "T1",
-    values: [
-        { time: new Date(2022, 0, 1, 0).getTime(), value: 22 },
-        { time: new Date(2022, 0, 1, 1).getTime(), value: 23 },
-        { time: new Date(2022, 0, 1, 2).getTime(), value: 24 },
-        { time: new Date(2022, 0, 1, 3).getTime(), value: 25 },
-        { time: new Date(2022, 0, 1, 4).getTime(), value: 26 },
-        { time: new Date(2022, 0, 1, 5).getTime(), value: 27 },
-        { time: new Date(2022, 0, 1, 6).getTime(), value: 28 },
-    ]
-}
+const CustomTooltip = (props) => {
+    const { active, payload, label } = props
+    console.log(props)
+    if (active && payload && payload.length) {
+        return (
+            <div style={{ padding: 5, backgroundColor: "rgb(0,0,0,0.1)", borderRadius: 20 }}>
+                <p>{`${payload[0].payload.dateTime}`}</p>
+                {payload.map((p,i) => (<div key={i}>
+                    <p><span style={{ color: p.color }}>{p.name + ": "}</span>{`${p.payload[p.name]}`}</p>
+                </div>))}
 
-const data2 = {
-    name: "T2",
-    values: [
-        { time: new Date(2022, 0, 1, 0).getTime(), value: 20 },
-        { time: new Date(2022, 0, 1, 1).getTime(), value: 21 },
-        { time: new Date(2022, 0, 1, 2).getTime(), value: 22 },
-        { time: new Date(2022, 0, 1, 3).getTime(), value: 23 },
-        { time: new Date(2022, 0, 1, 4).getTime(), value: 24 },
-        { time: new Date(2022, 0, 1, 5).getTime(), value: 25 },
-        { time: new Date(2022, 0, 1, 6).getTime(), value: 26 },
-    ]
-}
-// const data = [data1, data2]
+                <p ></p>
+            </div>
+        );
+    }
+
+    return null;
+};
+const colors = ["#8884d8", "#82ca9d", "#d45087", "#47bac1",
+    "#e27c3e", "#8d62a9", "#ff9f40", "#6e5687", "#52b6ca", "#ffc658"];
+
