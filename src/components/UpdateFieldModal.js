@@ -33,7 +33,7 @@ export default function UpdateFieldModal({ open, onAccept = () => { }, onCancel 
             <div style={{
                 position: "absolute",
                 width: "30vw",
-                height: "40vh",
+                height: "30",
                 backgroundColor: "#f7f7f7",
                 top: "50%",
                 left: "50%",

@@ -13,8 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Image } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
-const pages = ['Gráficos', 'Dispositivos'];
+const pages = [{ name: 'Gráficos', path: "/" }, { name: 'Dispositivos', path: "devices" }];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -98,8 +99,9 @@ function ResponsiveAppBar() {
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                                    <Link style={{ textDecoration: "none" }} to={page.path}>{page.name}  </Link>
+
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -107,11 +109,11 @@ function ResponsiveAppBar() {
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
                             <Button
-                                key={page}
+                                key={page.name}
                                 onClick={handleCloseNavMenu}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
                             >
-                                {page}
+                                <Link style={{ textDecoration: "none", color: "white" }} to={page.path}> {page.name}</Link>
                             </Button>
                         ))}
                     </Box>

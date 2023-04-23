@@ -1,8 +1,11 @@
 import moment from "moment/moment";
 import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis, Tooltip, ScatterChart, Scatter, ResponsiveContainer } from "recharts";
 
-export default function MyLineChart() {
-
+export default function MyLineChart({ data }) {
+    if (!data?.length) return (<div>No data</div>)
+    data.forEach((d) => {
+        d.measurements?.forEach((measurement) => measurement.createdAt = new Date(measurement.createdAt).getTime())
+    })
     return (
         <>
             <div style={{ width: '100%', height: 400, marginTop: 40, }}>
@@ -10,11 +13,11 @@ export default function MyLineChart() {
                     <LineChart width={730} height={250}
                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis type="number" dataKey="time" scale={"time"}  domain={['auto', 'auto']} tickFormatter={(value) => moment(value).format("DD/MM/yy hh:mm")} />
+                        <XAxis type="number" dataKey="createdAt" scale={"time"} domain={['auto', 'auto']} tickFormatter={(value) => moment(value).format("DD/MM/yy hh:mm")} />
                         <YAxis type="number" dataKey="value" domain={[0, "auto"]} />
                         <Tooltip />
                         <Legend />
-                        {data.map((d, index) => <Line key={index} name={d.name} dataKey={"value"} stroke={colors[index]} data={d.values} />)}
+                        {data?.map((d, index) => <Line key={index} name={d.name} dataKey={"value"} stroke={colors[index]} data={d.measurements} />)}
                     </LineChart>
                 </ResponsiveContainer>
             </div>
@@ -48,4 +51,4 @@ const data2 = {
         { time: new Date(2022, 0, 1, 6).getTime(), value: 26 },
     ]
 }
-const data = [data1, data2]
+// const data = [data1, data2]
