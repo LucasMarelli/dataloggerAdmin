@@ -5,16 +5,18 @@ export const groupAndSort = (devicesWithMeasurements) => {
     const groupedData = {}
     devicesWithMeasurements.forEach((device) => {
         device.measurements?.forEach((measurement) => {
-            measurement.dateTime = moment(measurement.createdAt).format("DD/MM/yyyy HH:mm")
-            measurement.time = moment(measurement.createdAt).valueOf()
-            if (!groupedData[measurement.dateTime]) {
-                groupedData[measurement.dateTime] = {}
-                groupedData[measurement.dateTime].dateTime = measurement.dateTime
+            const date = moment(moment(measurement.createdAt).startOf('minute').toISOString());
+            const dateTime = date.format("DD/MM/yyyy HH:mm")
+            if (!groupedData[dateTime]) {
+                groupedData[dateTime] = {}
+                groupedData[dateTime].dateTime = dateTime
             }
-            groupedData[measurement.dateTime].time = moment(measurement.createdAt).valueOf()
-            groupedData[measurement.dateTime][device.name] = measurement.value
+            groupedData[dateTime].time = date.valueOf()
+            groupedData[dateTime][device.name] = measurement.value
         })
     })
     var data = Object.keys(groupedData).map((key, i) => { return { ...groupedData[key], id: i } });
-    return data.sort((a, b) => a.time - b.time)
+    data.sort((a, b) => a.time - b.time)
+    console.log("data", data)
+    return data
 }

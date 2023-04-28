@@ -5,12 +5,18 @@ export default function MyTable({ data, devices }) {
     if (!data?.length) return (<div>No data</div>)
     console.log("data", data)
     const columns = devices.map((device) => {
+        const headerName = `${device.name} [${device.unit}]`
         return {
             field: device.name,
-            headerName: `${device.name} [${device.unit}]`,
+            headerName,
             width: 250,
             headerAlign: 'center',
-            align: 'center'
+            align: 'center',
+            renderHeader: (params) => (
+                <strong style={{ color: device.color }}>
+                    {headerName}
+                </strong>
+            ),
         }
     })
     columns.unshift({
@@ -27,8 +33,8 @@ export default function MyTable({ data, devices }) {
                 rows={data}
                 columns={columns}
                 pageSize={5}
+                disableRowSelectionOnClick  
                 rowsPerPageOptions={[5]}
-                checkboxSelection
                 style={{ padding: 10 }}
             />
         </div>
