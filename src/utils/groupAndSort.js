@@ -17,6 +17,5 @@ export const groupAndSort = (devicesWithMeasurements) => {
     })
     var data = Object.keys(groupedData).map((key, i) => { return { ...groupedData[key], id: i } });
     data.sort((a, b) => a.time - b.time)
-    console.log("data", data)
     return data
 }

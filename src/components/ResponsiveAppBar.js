@@ -46,7 +46,7 @@ function ResponsiveAppBar() {
                         sx={{
                             // maxHeight: { xs: 233, md: 167 },
                             height: 30,
-                            margin: 1
+                            margin: "1rem"
                         }}
                         alt="The house from the offer."
                         src="./LogoUTN.png"

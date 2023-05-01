@@ -69,7 +69,7 @@ export default function Dashboard() {
         <>
             <div style={{ padding: 0 }}>
                 <MeassurementsFilter onApply={handleMeassurementsFilter} />
-                <div style={{ display: "flex"}}>
+                <div style={{ display: "flex" }}>
                     <DeviceFilter devices={devicesNotFiltered} onChange={handleDevicesFilter}></DeviceFilter>
                     <MyLineChart data={chartData} devices={devicesWithMeassurements}></MyLineChart>
                 </div>
